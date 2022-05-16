@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/api")
 public class AccountHolderController implements AccountHolderControllerInterface {
     @Autowired
     private AccountHolderServiceInterface accountHolderServiceInterface;
 
-    /*@PatchMapping ("/accountHolders/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void passwordChange (@PathVariable Long id, @RequestBody UserPasswordOnlyDTO userPasswordOnlyDTO){
-        accountHolderServiceInterface.passwordChange(id,userPasswordOnlyDTO);
-    }*/
 
 }

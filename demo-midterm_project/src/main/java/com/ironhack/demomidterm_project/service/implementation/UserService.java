@@ -1,8 +1,10 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
+import com.ironhack.demomidterm_project.model.Account;
 import com.ironhack.demomidterm_project.model.User;
 import com.ironhack.demomidterm_project.repository.UserRepository;
 import com.ironhack.demomidterm_project.service.interfaces.UserServiceInterface;
+import com.ironhack.demomidterm_project.utils.Money;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,6 +27,9 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void deleteUser (Long id){
         userRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
         userRepository.deleteById(id);
@@ -35,6 +41,12 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     public User getUser (Long id){
         return userRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
+    }
+
+    public void updatePassword (String username, String password){
+        User userFromDb = userRepository.findByUsername(username);
+        userFromDb.setPassword(passwordEncoder.encode(password));
+        userRepository.save(userFromDb);
     }
 
     @Override

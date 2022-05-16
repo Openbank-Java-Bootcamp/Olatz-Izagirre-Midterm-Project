@@ -61,4 +61,44 @@ public abstract class Account {
         this.creationDate = Date.from(Instant.now());
         this.penaltyFee = new Money(BigDecimal.valueOf(40L));
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Money getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Money balance) {
+        this.balance = balance;
+    }
+
+    public AccountHolder getPrimaryOwner() {
+        return primaryOwner;
+    }
+
+    public void setPrimaryOwner(AccountHolder primaryOwner) {
+        this.primaryOwner = primaryOwner;
+    }
+
+    public AccountHolder getSecondaryOwner() {
+        return secondaryOwner;
+    }
+
+    public void setSecondaryOwner(AccountHolder secondaryOwner) {
+        this.secondaryOwner = secondaryOwner;
+    }
+
+    public Money getPenaltyFee() {
+        return penaltyFee;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
 }

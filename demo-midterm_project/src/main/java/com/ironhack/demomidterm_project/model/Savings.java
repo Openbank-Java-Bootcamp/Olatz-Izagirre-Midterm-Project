@@ -16,7 +16,7 @@ import java.util.Date;
 public class Savings extends Account{
     @NotNull
     @Digits(integer = 4,fraction = 0)
-    private Long secretKey;
+    private String secretKey;
     @Min(100L)
     @AttributeOverrides({
             @AttributeOverride( name = "currency" , column = @Column(name = "minimum_balance_currency")),
@@ -32,7 +32,7 @@ public class Savings extends Account{
     private Status status;
     private Date lastInterestDate;
 
-    public Savings(Money balance, AccountHolder primaryOwner, Long secretKey, Money minimumBalance, BigDecimal interestRate) {
+    public Savings(Money balance, AccountHolder primaryOwner, String secretKey, Money minimumBalance, BigDecimal interestRate) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.minimumBalance = minimumBalance;
@@ -40,7 +40,7 @@ public class Savings extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Long secretKey, Money minimumBalance, BigDecimal interestRate) {
+    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, Money minimumBalance, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.minimumBalance = minimumBalance;
@@ -48,7 +48,7 @@ public class Savings extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, Long secretKey, Money minimumBalance) {
+    public Savings(Money balance, AccountHolder primaryOwner, String secretKey, Money minimumBalance) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.minimumBalance = minimumBalance;
@@ -56,7 +56,7 @@ public class Savings extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, Long secretKey, BigDecimal interestRate) {
+    public Savings(Money balance, AccountHolder primaryOwner, String secretKey, BigDecimal interestRate) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.interestRate = interestRate;
@@ -64,7 +64,7 @@ public class Savings extends Account{
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, Long secretKey) {
+    public Savings(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.interestRate = BigDecimal.valueOf(0.0025);
@@ -72,7 +72,7 @@ public class Savings extends Account{
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Long secretKey, Money minimumBalance) {
+    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, Money minimumBalance) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.minimumBalance = minimumBalance;
@@ -80,7 +80,7 @@ public class Savings extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Long secretKey, BigDecimal interestRate) {
+    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.interestRate = interestRate;
@@ -88,7 +88,7 @@ public class Savings extends Account{
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Long secretKey) {
+    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.interestRate = BigDecimal.valueOf(0.0025);
@@ -96,11 +96,11 @@ public class Savings extends Account{
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
     }
 
-    public Long getSecretKey() {
+    public String getSecretKey() {
         return secretKey;
     }
 
-    public void setSecretKey(Long secretKey) {
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 

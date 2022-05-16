@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class CheckingAccount extends Account{
     @NotNull
     @Digits(integer = 4,fraction = 0)
-    private Long secretKey;
+    private String secretKey;
     @AttributeOverrides({
             @AttributeOverride( name = "currency" , column = @Column(name = "minimum_balance_currency")),
             @AttributeOverride( name = "amount" , column = @Column(name = "minimum_balance_amount")),
@@ -33,7 +33,7 @@ public class CheckingAccount extends Account{
     @Enumerated (EnumType.STRING)
     private Status status;
 
-    public CheckingAccount(Money balance, AccountHolder primaryOwner, Long secretKey) {
+    public CheckingAccount(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.maintenanceFee = new Money(BigDecimal.valueOf(12L));
@@ -41,7 +41,7 @@ public class CheckingAccount extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public CheckingAccount(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Long secretKey) {
+    public CheckingAccount(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.maintenanceFee = new Money(BigDecimal.valueOf(12L));
@@ -49,11 +49,11 @@ public class CheckingAccount extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public Long getSecretKey() {
+    public String getSecretKey() {
         return secretKey;
     }
 
-    public void setSecretKey(Long secretKey) {
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 

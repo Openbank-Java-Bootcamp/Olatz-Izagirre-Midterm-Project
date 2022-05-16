@@ -1,4 +1,4 @@
-/*package com.ironhack.demomidterm_project.security;
+package com.ironhack.demomidterm_project.security;
 
 
 import com.ironhack.demomidterm_project.filter.CustomAuthenticationFilter;
@@ -17,8 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -44,8 +43,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**").permitAll();
-        http.authorizeRequests().antMatchers(GET, "/api/users").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/api/users").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(POST, "/api/users").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(DELETE, "/api/users/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(DELETE, "/api/account/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(POST, "/api/accounts").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(POST, "/api/accounts/savings").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(POST, "/api/accounts/creditCards").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/api/accounts/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(PATCH, "/api/accounts/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -56,4 +63,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-}*/
+}

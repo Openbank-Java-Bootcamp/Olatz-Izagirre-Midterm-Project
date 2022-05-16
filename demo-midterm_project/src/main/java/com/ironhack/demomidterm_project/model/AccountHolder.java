@@ -15,7 +15,7 @@ import java.util.List;
 public class AccountHolder extends User{
     @Past
     @NotNull
-    private final Date dateOfBirth;
+    private Date dateOfBirth;
     @Embedded
     @NotNull
     private Address primaryAddress;
@@ -31,6 +31,9 @@ public class AccountHolder extends User{
     private List<Account> primaryOwnership;
     @OneToMany (mappedBy = "secondaryOwner")
     private List<Account> secondaryOwnership;
+
+    public AccountHolder() {
+    }
 
     public AccountHolder(String name, String username, Date dateOfBirth, Address primaryAddress, Address mailingAddress) {
         super(name, username);

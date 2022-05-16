@@ -18,7 +18,7 @@ public abstract class User {
     @NotNull
     private String username;
 
-    @Digits(integer = 6,fraction = 0)
+    //@Digits(integer = 6,fraction = 0)
     private String password;
     @ManyToOne
     @JoinColumn (name = "role")

@@ -1,4 +1,4 @@
-/*package com.ironhack.demomidterm_project.filter;
+package com.ironhack.demomidterm_project.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -56,4 +56,4 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
-}*/
+}

@@ -14,27 +14,27 @@ import jakarta.validation.constraints.NotNull;
 public class StudentChecking extends Account{
     @NotNull
     @Digits(integer = 4,fraction = 0)
-    private Long secretKey;
+    private String secretKey;
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public StudentChecking(Money balance, AccountHolder primaryOwner, Long secretKey) {
+    public StudentChecking(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.status = Status.ACTIVE;
     }
 
-    public StudentChecking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Long secretKey) {
+    public StudentChecking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.status = Status.ACTIVE;
     }
 
-    public Long getSecretKey() {
+    public String getSecretKey() {
         return secretKey;
     }
 
-    public void setSecretKey(Long secretKey) {
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 
