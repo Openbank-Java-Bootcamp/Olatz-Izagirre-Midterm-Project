@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @PrimaryKeyJoinColumn(name = "id")
 public class CheckingAccount extends Account{
     @NotNull
-    @Digits(integer = 4,fraction = 0)
     private String secretKey;
     @AttributeOverrides({
             @AttributeOverride( name = "currency" , column = @Column(name = "minimum_balance_currency")),
@@ -32,6 +31,12 @@ public class CheckingAccount extends Account{
     private final Money maintenanceFee;
     @Enumerated (EnumType.STRING)
     private Status status;
+
+    public CheckingAccount() {
+        this.maintenanceFee = new Money(BigDecimal.valueOf(12L));
+        this.minimumBalance = new Money(BigDecimal.valueOf(250L));
+        this.status = Status.ACTIVE;
+    }
 
     public CheckingAccount(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);

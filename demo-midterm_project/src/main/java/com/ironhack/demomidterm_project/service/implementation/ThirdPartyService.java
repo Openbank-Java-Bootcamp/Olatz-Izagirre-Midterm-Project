@@ -29,7 +29,7 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
             if(optionalThirdParty.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Third Party already exists");
         }
         thirdParty.setRole(roleRepository.findByName("THIRD_PARTY"));
-        thirdParty.setPassword(passwordEncoder.encode(thirdParty.getPassword()));
+        thirdParty.setPassword(passwordEncoder.encode("123456"));
         return thirdPartyRepository.save(thirdParty);
     }
 }

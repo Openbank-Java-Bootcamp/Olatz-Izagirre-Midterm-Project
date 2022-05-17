@@ -1,6 +1,8 @@
 package com.ironhack.demomidterm_project.utils;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import java.math.RoundingMode;
 import java.math.BigDecimal;
@@ -12,7 +14,13 @@ public class Money {
     private static final RoundingMode DEFAULT_ROUNDING = RoundingMode.HALF_EVEN;
 
     private final Currency currency;
+    @Max(100000L)
+    @Min(100L)
     private BigDecimal amount;
+
+    public Money() {
+        this.currency = USD;
+    }
 
     /**
      * Class constructor specifying amount, currency, and rounding

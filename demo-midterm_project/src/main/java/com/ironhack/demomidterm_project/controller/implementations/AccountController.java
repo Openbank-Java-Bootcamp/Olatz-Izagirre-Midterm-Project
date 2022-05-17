@@ -1,6 +1,7 @@
 package com.ironhack.demomidterm_project.controller.implementations;
 
 import com.ironhack.demomidterm_project.DTO.AccountBalanceOnlyDTO;
+import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.controller.interfaces.AccountControllerInterface;
 import com.ironhack.demomidterm_project.model.*;
 import com.ironhack.demomidterm_project.service.interfaces.*;
@@ -10,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -25,16 +28,6 @@ public class AccountController implements AccountControllerInterface {
     @Autowired
     private StudentCheckingServiceInterface studentCheckingServiceInterface;
 
-    @PostMapping("/accounts")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Account createAccount (@RequestBody @Valid Account account){
-        if (account instanceof CheckingAccount && TimeUnit.DAYS.convert(Date.from(Instant.now()).getTime()-account.getPrimaryOwner().getDateOfBirth().getTime(),TimeUnit.MILLISECONDS) < 8760){
-            return studentCheckingServiceInterface.createAccount((StudentChecking)account);
-        }
-        else {
-            return checkingAccountServiceInterface.createAccount((CheckingAccount)account);
-        }
-    }
 
     @DeleteMapping ("/accounts/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -64,5 +57,23 @@ public class AccountController implements AccountControllerInterface {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateAccountBalance (@PathVariable Long id, @RequestBody AccountBalanceOnlyDTO accountBalanceOnlyDTO){
         accountServiceInterface.updateAccountBalance(id,accountBalanceOnlyDTO.getBalance().getAmount());
+    }
+
+    @GetMapping ("/accounts/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Account> getUsersAccounts (@PathVariable String username, Principal principal){
+        if (Objects.equals(principal.getName(), username)){
+            return accountServiceInterface.getUsersAccounts(username);
+    }else{
+            return null;
+        }
+    }
+
+    @PatchMapping ("/accounts/{username}/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void moneyTransfer (@PathVariable String username, @PathVariable Long id, Principal principal, @RequestBody TransferDTO transferDTO){
+        if (Objects.equals(principal.getName(), username)){
+            accountServiceInterface.moneyTransfer(id, transferDTO);
+        }
     }
 }

@@ -1,14 +1,17 @@
 package com.ironhack.demomidterm_project.controller.interfaces;
 
+import com.ironhack.demomidterm_project.DTO.UserPasswordOnlyDTO;
 import com.ironhack.demomidterm_project.model.User;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserControllerInterface {
-    User createUser(User user);
     void deleteUser (Long id);
 
     User getUser (Long id);
 
     List<User> getUsers ();
+
+    void passwordChange (String username, Principal principal, UserPasswordOnlyDTO userPasswordOnlyDTO);
 }

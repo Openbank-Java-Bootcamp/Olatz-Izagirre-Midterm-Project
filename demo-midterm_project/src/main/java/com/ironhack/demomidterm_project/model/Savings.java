@@ -3,6 +3,7 @@ package com.ironhack.demomidterm_project.model;
 import com.ironhack.demomidterm_project.enums.Status;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
@@ -15,9 +16,8 @@ import java.util.Date;
 @PrimaryKeyJoinColumn(name = "id")
 public class Savings extends Account{
     @NotNull
-    @Digits(integer = 4,fraction = 0)
     private String secretKey;
-    @Min(100L)
+    //@Min(100L)
     @AttributeOverrides({
             @AttributeOverride( name = "currency" , column = @Column(name = "minimum_balance_currency")),
             @AttributeOverride( name = "amount" , column = @Column(name = "minimum_balance_amount")),
@@ -25,12 +25,20 @@ public class Savings extends Account{
     })
     @Column(length = 510)
     @Embedded
+    @Valid
     private Money minimumBalance;
     @DecimalMax("0.5")
+    @Column(precision = 32,scale = 4)
     private BigDecimal interestRate;
     @Enumerated(EnumType.STRING)
     private Status status;
     private Date lastInterestDate;
+
+    public Savings() {
+        this.interestRate = BigDecimal.valueOf(0.0025);
+        this.status = Status.ACTIVE;
+        this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
+    }
 
     public Savings(Money balance, AccountHolder primaryOwner, String secretKey, Money minimumBalance, BigDecimal interestRate) {
         super(balance, primaryOwner);

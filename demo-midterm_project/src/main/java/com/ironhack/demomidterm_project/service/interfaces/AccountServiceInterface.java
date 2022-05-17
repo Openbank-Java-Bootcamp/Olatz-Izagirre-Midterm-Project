@@ -1,5 +1,6 @@
 package com.ironhack.demomidterm_project.service.interfaces;
 
+import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.model.Account;
 import com.ironhack.demomidterm_project.utils.Money;
 
@@ -13,4 +14,8 @@ public interface AccountServiceInterface {
     Money getAccountBalance (Long id);
 
     void updateAccountBalance(Long id, BigDecimal amount);
+
+    List<Account> getUsersAccounts (String username);
+    void moneyTransfer (Long id, TransferDTO transferDTO);
+
 }

@@ -13,10 +13,13 @@ import jakarta.validation.constraints.NotNull;
 @PrimaryKeyJoinColumn(name = "id")
 public class StudentChecking extends Account{
     @NotNull
-    @Digits(integer = 4,fraction = 0)
     private String secretKey;
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public StudentChecking() {
+        this.status = Status.ACTIVE;
+    }
 
     public StudentChecking(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);

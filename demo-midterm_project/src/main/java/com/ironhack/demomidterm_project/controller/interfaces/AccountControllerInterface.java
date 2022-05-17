@@ -5,10 +5,10 @@ import com.ironhack.demomidterm_project.model.Account;
 import com.ironhack.demomidterm_project.model.User;
 import com.ironhack.demomidterm_project.utils.Money;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface AccountControllerInterface {
-    Account createAccount(Account account);
     void deleteAccount (Long id);
 
     /*Account getAccount (Long id);
@@ -18,4 +18,6 @@ public interface AccountControllerInterface {
     Money getAccountBalance (Long id);
 
     void updateAccountBalance (Long id, AccountBalanceOnlyDTO accountBalanceOnlyDTO);
+
+   List<Account> getUsersAccounts (String username, Principal principal);
 }

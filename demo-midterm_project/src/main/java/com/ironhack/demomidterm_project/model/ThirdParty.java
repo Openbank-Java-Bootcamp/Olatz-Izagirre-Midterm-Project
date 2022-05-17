@@ -12,7 +12,7 @@ public class ThirdParty extends User{
     public ThirdParty() {
     }
 
-    public ThirdParty(String name, String username, String password) {
+    public ThirdParty(String name, String username) {
         super(name, username);
     }
 

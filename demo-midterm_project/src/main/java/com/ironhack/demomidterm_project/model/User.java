@@ -18,13 +18,13 @@ public abstract class User {
     @NotNull
     private String username;
 
-    //@Digits(integer = 6,fraction = 0)
     private String password;
     @ManyToOne
     @JoinColumn (name = "role")
     private Role role;
 
     public User() {
+        this.password = "123456";
     }
 
     public User(String name, String username) {

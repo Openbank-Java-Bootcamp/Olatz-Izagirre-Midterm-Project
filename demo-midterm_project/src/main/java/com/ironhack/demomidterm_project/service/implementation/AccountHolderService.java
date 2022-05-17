@@ -29,13 +29,8 @@ public class AccountHolderService implements AccountHolderServiceInterface {
             if(optionalAccountHolder.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Account Holder already exists");
         }
         accountHolder.setRole(roleRepository.findByName("ACCOUNT_HOLDER"));
-        accountHolder.setPassword(passwordEncoder.encode(accountHolder.getPassword()));
+        accountHolder.setPassword(passwordEncoder.encode("123456"));
         return accountHolderRepository.save(accountHolder);
     }
 
-    public void changePassword (Long id, UserPasswordOnlyDTO userPasswordOnlyDTO){
-        AccountHolder accountHolderFromDb = accountHolderRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account Holder not found"));
-        accountHolderFromDb.setPassword(passwordEncoder.encode(userPasswordOnlyDTO.getPassword()));
-        accountHolderRepository.save(accountHolderFromDb);
-    }
 }

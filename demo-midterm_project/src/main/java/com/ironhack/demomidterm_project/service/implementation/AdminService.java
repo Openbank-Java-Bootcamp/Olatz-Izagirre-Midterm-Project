@@ -32,7 +32,7 @@ public class AdminService implements AdminServiceInterface {
             if(optionalAdmin.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Admin already exists");
         }
         admin.setRole(roleRepository.findByName("ADMIN"));
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setPassword(passwordEncoder.encode("123456"));
         return adminRepository.save(admin);
     }
 

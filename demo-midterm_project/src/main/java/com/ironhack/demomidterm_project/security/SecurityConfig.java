@@ -45,13 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/login/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/api/users").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(POST, "/api/users").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(POST, "/api/users/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(DELETE, "/api/users/**").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(DELETE, "/api/account/**").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(POST, "/api/accounts").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(DELETE, "/api/accounts/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(POST, "/api/accounts/checkingAccounts").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(POST, "/api/accounts/savings").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(POST, "/api/accounts/creditCards").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(GET, "/api/accounts/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/api/accounts/**").hasAnyAuthority("ACCOUNT_HOLDER");
         http.authorizeRequests().antMatchers(PATCH, "/api/accounts/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);

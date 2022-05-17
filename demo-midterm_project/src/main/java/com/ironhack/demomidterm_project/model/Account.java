@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.Date;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Account {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,11 +23,11 @@ public abstract class Account {
     @Column(length = 510)
     @Embedded
     private Money balance;
-    @NotNull
-    @ManyToOne
+
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn (name = "primary_account_holder_id")
     private AccountHolder primaryOwner;
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn (name = "secondary_account_holder_id")
     private AccountHolder secondaryOwner;
 

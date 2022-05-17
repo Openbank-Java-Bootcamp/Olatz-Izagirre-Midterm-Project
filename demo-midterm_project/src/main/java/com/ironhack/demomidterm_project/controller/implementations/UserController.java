@@ -24,25 +24,7 @@ import java.util.Objects;
 public class UserController implements UserControllerInterface {
     @Autowired
     private UserServiceInterface userServiceInterface;
-    @Autowired
-    private AdminServiceInterface adminServiceInterface;
 
-    @Autowired
-    private AccountHolderServiceInterface accountHolderServiceInterface;
-    @Autowired
-    private ThirdPartyServiceInterface thirdPartyServiceInterface;
-
-    @PostMapping("/users")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody @Valid User user) {
-        if (user instanceof Admin) {
-            return adminServiceInterface.createAdmin((Admin) user);
-        } else if (user instanceof AccountHolder) {
-            return accountHolderServiceInterface.createAccountHolder((AccountHolder) user);
-        } else {
-            return thirdPartyServiceInterface.createThirdParty((ThirdParty) user);
-        }
-    }
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
