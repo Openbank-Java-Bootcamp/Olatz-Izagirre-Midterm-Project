@@ -76,7 +76,7 @@ public class AccountController implements AccountControllerInterface {
     }
 
     @PatchMapping ("/accounts/{username}/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void moneyTransfer (@PathVariable String username, @PathVariable Long id, Principal principal, @RequestBody TransferDTO transferDTO){
         if(userRepository.findByUsername(username)!= null && accountRepository.findById(id).isPresent()){
             if (Objects.equals(principal.getName(), username)&&Objects.equals(accountRepository.findById(id).get().getPrimaryOwner().getUsername(), username)){

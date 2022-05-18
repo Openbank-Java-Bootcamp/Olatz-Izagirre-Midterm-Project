@@ -88,4 +88,28 @@ public class CreditCard extends Account{
         this.creditLimit = new Money(BigDecimal.valueOf(100L));
         setType(Type.CREDIT_CARD);
     }
+
+    public Money getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(Money creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
+    public BigDecimal getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public Date getLastInterestDate() {
+        return lastInterestDate;
+    }
+
+    public void setLastInterestDate(Date lastInterestDate) {
+        this.lastInterestDate = lastInterestDate;
+    }
 }

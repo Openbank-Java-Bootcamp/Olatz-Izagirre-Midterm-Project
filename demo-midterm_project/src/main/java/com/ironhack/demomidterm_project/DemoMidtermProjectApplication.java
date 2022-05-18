@@ -2,10 +2,7 @@ package com.ironhack.demomidterm_project;
 
 import com.ironhack.demomidterm_project.model.Admin;
 import com.ironhack.demomidterm_project.model.Role;
-import com.ironhack.demomidterm_project.service.implementation.AccountHolderService;
-import com.ironhack.demomidterm_project.service.implementation.AdminService;
-import com.ironhack.demomidterm_project.service.implementation.RoleService;
-import com.ironhack.demomidterm_project.service.implementation.ThirdPartyService;
+import com.ironhack.demomidterm_project.service.implementation.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,13 +25,16 @@ public class DemoMidtermProjectApplication {
     }
 
     @Bean
-    CommandLineRunner run(AdminService adminService, AccountHolderService accountHolderService, ThirdPartyService thirdPartyService, RoleService roleService) {
+    CommandLineRunner run(AdminService adminService, AccountHolderService accountHolderService, ThirdPartyService thirdPartyService, RoleService roleService, SavingsService savingsService, CreditCardService creditCardService) {
         return args -> {
-            roleService.saveRole(new Role("ADMIN"));
+            /*roleService.saveRole(new Role("ADMIN"));
             roleService.saveRole(new Role("ACCOUNT_HOLDER"));
             roleService.saveRole(new Role("THIRD_PARTY"));
 
-            adminService.createAdmin(new Admin("Olatz","Oli"));
+            adminService.createAdmin(new Admin("Olatz","Oli"));*/
+
+            savingsService.savingsInterests();
+            creditCardService.creditCardInterests();
 
         };
     }

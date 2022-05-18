@@ -1,11 +1,10 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.model.Account;
 import com.ironhack.demomidterm_project.model.AccountHolder;
-import com.ironhack.demomidterm_project.repository.AccountHolderRepository;
-import com.ironhack.demomidterm_project.repository.AccountRepository;
-import com.ironhack.demomidterm_project.repository.UserRepository;
+import com.ironhack.demomidterm_project.repository.*;
 import com.ironhack.demomidterm_project.service.interfaces.AccountServiceInterface;
 import com.ironhack.demomidterm_project.utils.Money;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,12 @@ public class AccountService implements AccountServiceInterface {
 
     @Autowired
     private AccountHolderRepository accountHolderRepository;
+
+    @Autowired
+    private SavingsRepository savingsRepository;
+
+    @Autowired
+    private CheckingAccountRepository checkingAccountRepository;
 
     public void deleteAccount (Long id){
         accountRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
@@ -64,9 +69,22 @@ public class AccountService implements AccountServiceInterface {
             Long receiverId = transferDTO.getAccountId();
             Account transferReceiver = accountRepository.findById(receiverId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
             Long ownerId = transferDTO.getOwnerId();
-            if(transferReceiver.getPrimaryOwner().equals(accountHolderRepository.findById(ownerId).get())){
+            AccountHolder owner = accountHolderRepository.findById(ownerId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Owner not found"));
+            if(transferReceiver.getPrimaryOwner().equals(owner)|| transferReceiver.getSecondaryOwner().equals(owner)){
                 BigDecimal newBalanceMaker = transferMaker.getBalance().getAmount().subtract(transferAmount);
                 BigDecimal newBalanceReceiver = transferReceiver.getBalance().getAmount().add(transferAmount);
+                if(transferMaker.getType()== Type.SAVINGS){
+                    BigDecimal minimumBalance = savingsRepository.findById(id).get().getMinimumBalance().getAmount();
+                    if (newBalanceMaker.compareTo(minimumBalance)<0){
+                        newBalanceMaker = newBalanceMaker.subtract(savingsRepository.findById(id).get().getPenaltyFee().getAmount());
+                    }
+                }
+                else if (transferMaker.getType()== Type.CHECKING){
+                    BigDecimal minimumBalance = checkingAccountRepository.findById(id).get().getMinimumBalance().getAmount();
+                    if (newBalanceMaker.compareTo(minimumBalance)<0){
+                        newBalanceMaker = newBalanceMaker.subtract(checkingAccountRepository.findById(id).get().getPenaltyFee().getAmount());
+                    }
+                }
                 transferMaker.setBalance(new Money(newBalanceMaker));
                 transferReceiver.setBalance(new Money(newBalanceReceiver));
                 accountRepository.save(transferMaker);
