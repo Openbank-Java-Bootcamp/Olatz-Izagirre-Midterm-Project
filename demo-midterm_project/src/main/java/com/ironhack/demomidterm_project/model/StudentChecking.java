@@ -1,12 +1,12 @@
 package com.ironhack.demomidterm_project.model;
 
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.enums.Status;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -19,18 +19,21 @@ public class StudentChecking extends Account{
 
     public StudentChecking() {
         this.status = Status.ACTIVE;
+        setType(Type.STUDENT_CHECKING);
     }
 
     public StudentChecking(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
         this.status = Status.ACTIVE;
+        setType(Type.STUDENT_CHECKING);
     }
 
     public StudentChecking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
         this.status = Status.ACTIVE;
+        setType(Type.STUDENT_CHECKING);
     }
 
     public String getSecretKey() {

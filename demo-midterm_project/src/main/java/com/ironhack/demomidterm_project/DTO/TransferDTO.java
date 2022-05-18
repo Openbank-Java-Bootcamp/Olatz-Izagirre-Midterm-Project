@@ -5,15 +5,15 @@ import com.ironhack.demomidterm_project.utils.Money;
 
 public class TransferDTO {
     private Money amount;
-    private AccountHolder owner;
+    private Long ownerId;
     private Long accountId;
 
     public TransferDTO() {
     }
 
-    public TransferDTO(Money amount, AccountHolder owner, Long accountId) {
+    public TransferDTO(Money amount, Long ownerId, Long accountId) {
         this.amount = amount;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.accountId = accountId;
     }
 
@@ -25,12 +25,12 @@ public class TransferDTO {
         this.amount = amount;
     }
 
-    public AccountHolder getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(AccountHolder owner) {
-        this.owner = owner;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public Long getAccountId() {

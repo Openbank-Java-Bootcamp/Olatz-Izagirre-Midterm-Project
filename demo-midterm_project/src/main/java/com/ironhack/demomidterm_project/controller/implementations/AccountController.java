@@ -4,12 +4,15 @@ import com.ironhack.demomidterm_project.DTO.AccountBalanceOnlyDTO;
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.controller.interfaces.AccountControllerInterface;
 import com.ironhack.demomidterm_project.model.*;
+import com.ironhack.demomidterm_project.repository.AccountRepository;
+import com.ironhack.demomidterm_project.repository.UserRepository;
 import com.ironhack.demomidterm_project.service.interfaces.*;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.Instant;
@@ -27,7 +30,10 @@ public class AccountController implements AccountControllerInterface {
     private CheckingAccountServiceInterface checkingAccountServiceInterface;
     @Autowired
     private StudentCheckingServiceInterface studentCheckingServiceInterface;
-
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @DeleteMapping ("/accounts/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -65,15 +71,23 @@ public class AccountController implements AccountControllerInterface {
         if (Objects.equals(principal.getName(), username)){
             return accountServiceInterface.getUsersAccounts(username);
     }else{
-            return null;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access forbidden.");
         }
     }
 
     @PatchMapping ("/accounts/{username}/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.CREATED)
     public void moneyTransfer (@PathVariable String username, @PathVariable Long id, Principal principal, @RequestBody TransferDTO transferDTO){
-        if (Objects.equals(principal.getName(), username)){
-            accountServiceInterface.moneyTransfer(id, transferDTO);
+        if(userRepository.findByUsername(username)!= null && accountRepository.findById(id).isPresent()){
+            if (Objects.equals(principal.getName(), username)&&Objects.equals(accountRepository.findById(id).get().getPrimaryOwner().getUsername(), username)){
+                accountServiceInterface.moneyTransfer(id, transferDTO);
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access forbidden.");
+            }
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not found.");
         }
     }
 }

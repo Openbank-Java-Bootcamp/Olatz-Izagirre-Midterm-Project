@@ -1,7 +1,7 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.model.CreditCard;
-import com.ironhack.demomidterm_project.model.Savings;
 import com.ironhack.demomidterm_project.repository.CreditCardRepository;
 import com.ironhack.demomidterm_project.service.interfaces.CreditCardServiceInterface;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +23,7 @@ public class CreditCardService implements CreditCardServiceInterface {
             Optional<CreditCard> optionalCreditCard = creditCardRepository.findById(creditCard.getId());
             if(optionalCreditCard.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Account already exists");
         }
+        creditCard.setType(Type.CREDIT_CARD);
         return creditCardRepository.save(creditCard);
     }
 }

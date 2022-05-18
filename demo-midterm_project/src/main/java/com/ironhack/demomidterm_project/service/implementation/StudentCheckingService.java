@@ -1,6 +1,6 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
-import com.ironhack.demomidterm_project.model.CheckingAccount;
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.model.StudentChecking;
 import com.ironhack.demomidterm_project.repository.StudentCheckingRepository;
 import com.ironhack.demomidterm_project.service.interfaces.StudentCheckingServiceInterface;
@@ -27,6 +27,7 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
             if(optionalStudentChecking.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Account already exists");
         }
         studentChecking.setSecretKey(passwordEncoder.encode(studentChecking.getSecretKey()));
+        studentChecking.setType(Type.STUDENT_CHECKING);
         return studentCheckingRepository.save(studentChecking);
     }
 }

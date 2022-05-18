@@ -1,9 +1,9 @@
 package com.ironhack.demomidterm_project.model;
 
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.enums.Status;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
@@ -36,6 +36,7 @@ public class CheckingAccount extends Account{
         this.maintenanceFee = new Money(BigDecimal.valueOf(12L));
         this.minimumBalance = new Money(BigDecimal.valueOf(250L));
         this.status = Status.ACTIVE;
+        setType(Type.CHECKING);
     }
 
     public CheckingAccount(Money balance, AccountHolder primaryOwner, String secretKey) {
@@ -44,6 +45,7 @@ public class CheckingAccount extends Account{
         this.maintenanceFee = new Money(BigDecimal.valueOf(12L));
         this.minimumBalance = new Money(BigDecimal.valueOf(250L));
         this.status = Status.ACTIVE;
+        setType(Type.CHECKING);
     }
 
     public CheckingAccount(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
@@ -52,6 +54,7 @@ public class CheckingAccount extends Account{
         this.maintenanceFee = new Money(BigDecimal.valueOf(12L));
         this.minimumBalance = new Money(BigDecimal.valueOf(250L));
         this.status = Status.ACTIVE;
+        setType(Type.CHECKING);
     }
 
     public String getSecretKey() {

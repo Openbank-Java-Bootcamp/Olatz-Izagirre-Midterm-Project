@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Past;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -66,5 +67,18 @@ public class AccountHolder extends User{
 
     public void setMailingAddress(Address mailingAddress) {
         this.mailingAddress = mailingAddress;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccountHolder that = (AccountHolder) o;
+        return Objects.equals(dateOfBirth, that.dateOfBirth) && Objects.equals(primaryAddress, that.primaryAddress) && Objects.equals(mailingAddress, that.mailingAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dateOfBirth, primaryAddress, mailingAddress, primaryOwnership, secondaryOwnership);
     }
 }

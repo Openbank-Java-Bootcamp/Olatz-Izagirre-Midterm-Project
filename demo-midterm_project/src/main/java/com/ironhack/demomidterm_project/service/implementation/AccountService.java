@@ -3,6 +3,7 @@ package com.ironhack.demomidterm_project.service.implementation;
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.model.Account;
 import com.ironhack.demomidterm_project.model.AccountHolder;
+import com.ironhack.demomidterm_project.repository.AccountHolderRepository;
 import com.ironhack.demomidterm_project.repository.AccountRepository;
 import com.ironhack.demomidterm_project.repository.UserRepository;
 import com.ironhack.demomidterm_project.service.interfaces.AccountServiceInterface;
@@ -23,6 +24,9 @@ public class AccountService implements AccountServiceInterface {
     private AccountRepository accountRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AccountHolderRepository accountHolderRepository;
 
     public void deleteAccount (Long id){
         accountRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
@@ -54,21 +58,26 @@ public class AccountService implements AccountServiceInterface {
     }
 
     public void moneyTransfer (Long id, TransferDTO transferDTO){
-        Account transferMakerAccount =accountRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
+        Account transferMaker = accountRepository.findById(id).get();
         BigDecimal transferAmount = transferDTO.getAmount().getAmount();
-        AccountHolder owner = transferDTO.getOwner();
-        Long transferId = transferDTO.getAccountId();
-        Account transferReceiverAccount =accountRepository.findById(transferId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
-        if(transferReceiverAccount.getPrimaryOwner()==owner ||transferReceiverAccount.getSecondaryOwner()==owner ){
-            BigDecimal newBalanceMaker = transferMakerAccount.getBalance().getAmount().subtract(transferAmount);
-            BigDecimal newBalanceReceiver = transferReceiverAccount.getBalance().getAmount().add(transferAmount);
-            transferMakerAccount.setBalance(new Money(newBalanceMaker));
-            transferReceiverAccount.setBalance(new Money(newBalanceReceiver));
-            accountRepository.save(transferMakerAccount);
-            accountRepository.save(transferReceiverAccount);
+        if(transferMaker.getBalance().getAmount().compareTo(transferAmount)>=0){
+            Long receiverId = transferDTO.getAccountId();
+            Account transferReceiver = accountRepository.findById(receiverId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
+            Long ownerId = transferDTO.getOwnerId();
+            if(transferReceiver.getPrimaryOwner().equals(accountHolderRepository.findById(ownerId).get())){
+                BigDecimal newBalanceMaker = transferMaker.getBalance().getAmount().subtract(transferAmount);
+                BigDecimal newBalanceReceiver = transferReceiver.getBalance().getAmount().add(transferAmount);
+                transferMaker.setBalance(new Money(newBalanceMaker));
+                transferReceiver.setBalance(new Money(newBalanceReceiver));
+                accountRepository.save(transferMaker);
+                accountRepository.save(transferReceiver);
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong account.");
+            }
         }
         else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough funds.");
         }
     }
 

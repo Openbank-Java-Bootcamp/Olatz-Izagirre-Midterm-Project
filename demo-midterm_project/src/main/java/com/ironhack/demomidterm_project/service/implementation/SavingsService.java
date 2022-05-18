@@ -1,6 +1,6 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
-import com.ironhack.demomidterm_project.model.CheckingAccount;
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.model.Savings;
 import com.ironhack.demomidterm_project.repository.SavingsRepository;
 import com.ironhack.demomidterm_project.service.interfaces.SavingsServiceInterface;
@@ -27,6 +27,7 @@ public class SavingsService implements SavingsServiceInterface {
             if(optionalSavings.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Account already exists");
         }
         savings.setSecretKey(passwordEncoder.encode(savings.getSecretKey()));
+        savings.setType(Type.SAVINGS);
         return savingsRepository.save(savings);
     }
 }

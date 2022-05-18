@@ -1,12 +1,11 @@
 package com.ironhack.demomidterm_project.model;
 
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.enums.Status;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
@@ -38,6 +37,7 @@ public class Savings extends Account{
         this.interestRate = BigDecimal.valueOf(0.0025);
         this.status = Status.ACTIVE;
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, String secretKey, Money minimumBalance, BigDecimal interestRate) {
@@ -46,6 +46,7 @@ public class Savings extends Account{
         this.minimumBalance = minimumBalance;
         this.interestRate = interestRate;
         this.status = Status.ACTIVE;
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, Money minimumBalance, BigDecimal interestRate) {
@@ -54,6 +55,7 @@ public class Savings extends Account{
         this.minimumBalance = minimumBalance;
         this.interestRate = interestRate;
         this.status = Status.ACTIVE;
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, String secretKey, Money minimumBalance) {
@@ -62,6 +64,7 @@ public class Savings extends Account{
         this.minimumBalance = minimumBalance;
         this.interestRate = BigDecimal.valueOf(0.0025);
         this.status = Status.ACTIVE;
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, String secretKey, BigDecimal interestRate) {
@@ -70,6 +73,7 @@ public class Savings extends Account{
         this.interestRate = interestRate;
         this.status = Status.ACTIVE;
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, String secretKey) {
@@ -78,6 +82,7 @@ public class Savings extends Account{
         this.interestRate = BigDecimal.valueOf(0.0025);
         this.status = Status.ACTIVE;
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, Money minimumBalance) {
@@ -86,6 +91,7 @@ public class Savings extends Account{
         this.minimumBalance = minimumBalance;
         this.interestRate = BigDecimal.valueOf(0.0025);
         this.status = Status.ACTIVE;
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, BigDecimal interestRate) {
@@ -94,6 +100,7 @@ public class Savings extends Account{
         this.interestRate = interestRate;
         this.status = Status.ACTIVE;
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
+        setType(Type.SAVINGS);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
@@ -102,6 +109,7 @@ public class Savings extends Account{
         this.interestRate = BigDecimal.valueOf(0.0025);
         this.status = Status.ACTIVE;
         this.minimumBalance = new Money(BigDecimal.valueOf(1000L));
+        setType(Type.SAVINGS);
     }
 
     public String getSecretKey() {

@@ -1,10 +1,10 @@
 package com.ironhack.demomidterm_project.model;
 
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
 
 
 import java.math.BigDecimal;
@@ -30,53 +30,62 @@ public class CreditCard extends Account{
     public CreditCard() {
         this.interestRate = BigDecimal.valueOf(0.2);
         this.creditLimit = new Money(BigDecimal.valueOf(100L));
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner);
         this.creditLimit = creditLimit;
         this.interestRate = interestRate;
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         this.creditLimit = creditLimit;
         this.interestRate = interestRate;
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit) {
         super(balance, primaryOwner);
         this.creditLimit = creditLimit;
         this.interestRate = BigDecimal.valueOf(0.2);
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, BigDecimal interestRate) {
         super(balance, primaryOwner);
         this.interestRate = interestRate;
         this.creditLimit = new Money(BigDecimal.valueOf(100L));
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner) {
         super(balance, primaryOwner);
         this.interestRate = BigDecimal.valueOf(0.2);
         this.creditLimit = new Money(BigDecimal.valueOf(100L));
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit) {
         super(balance, primaryOwner, secondaryOwner);
         this.creditLimit = creditLimit;
         this.interestRate = BigDecimal.valueOf(0.2);
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         this.interestRate = interestRate;
         this.creditLimit = new Money(BigDecimal.valueOf(100L));
+        setType(Type.CREDIT_CARD);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
         super(balance, primaryOwner, secondaryOwner);
         this.interestRate = BigDecimal.valueOf(0.2);
         this.creditLimit = new Money(BigDecimal.valueOf(100L));
+        setType(Type.CREDIT_CARD);
     }
 }

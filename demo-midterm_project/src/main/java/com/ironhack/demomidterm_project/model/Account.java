@@ -1,8 +1,8 @@
 package com.ironhack.demomidterm_project.model;
 
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.utils.Money;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.math.BigDecimal;
@@ -41,6 +41,8 @@ public class Account {
     private final Money penaltyFee;
     @PastOrPresent
     private final Date creationDate;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     public Account() {
         this.creationDate = Date.from(Instant.now());
@@ -100,5 +102,13 @@ public class Account {
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }
