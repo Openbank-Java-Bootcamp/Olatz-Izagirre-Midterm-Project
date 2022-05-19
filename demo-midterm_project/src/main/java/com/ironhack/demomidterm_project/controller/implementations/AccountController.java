@@ -1,9 +1,11 @@
 package com.ironhack.demomidterm_project.controller.implementations;
 
 import com.ironhack.demomidterm_project.DTO.AccountBalanceOnlyDTO;
+import com.ironhack.demomidterm_project.DTO.AccountDTO;
 import com.ironhack.demomidterm_project.DTO.ThirdPartyTransferDTO;
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.controller.interfaces.AccountControllerInterface;
+import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.model.*;
 import com.ironhack.demomidterm_project.repository.AccountRepository;
 import com.ironhack.demomidterm_project.repository.UserRepository;
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -68,15 +71,24 @@ public class AccountController implements AccountControllerInterface {
 
     @GetMapping ("/accounts/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getUsersAccounts (@PathVariable String username, Principal principal){
+    public List<AccountDTO> getUsersAccounts (@PathVariable String username, Principal principal){
         if (Objects.equals(principal.getName(), username)){
-            return accountServiceInterface.getUsersAccounts(username);
+            List<Account> accountList = accountServiceInterface.getUsersAccounts(username);
+            List<AccountDTO> accountDTOList =new ArrayList<>();
+            for(Account account : accountList){
+                Long id = account.getId();
+                Money balance = account.getBalance();
+                Type type = account.getType();
+                AccountDTO accountDTO = new AccountDTO(id,balance,type);
+                accountDTOList.add(accountDTO);
+            }
+            return accountDTOList;
     }else{
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access forbidden.");
         }
     }
 
-    @PatchMapping ("/accounts/{username}/{id}")
+    @PatchMapping ("/accounts/transfers/{username}/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void moneyTransfer (@PathVariable String username, @PathVariable Long id, Principal principal, @RequestBody TransferDTO transferDTO){
         if(userRepository.findByUsername(username)!= null && accountRepository.findById(id).isPresent()){

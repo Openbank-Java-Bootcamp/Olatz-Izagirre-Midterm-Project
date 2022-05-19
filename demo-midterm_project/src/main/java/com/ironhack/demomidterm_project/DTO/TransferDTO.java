@@ -2,10 +2,14 @@ package com.ironhack.demomidterm_project.DTO;
 
 import com.ironhack.demomidterm_project.model.AccountHolder;
 import com.ironhack.demomidterm_project.utils.Money;
+import jakarta.validation.constraints.NotNull;
 
 public class TransferDTO {
+    @NotNull
     private Money amount;
+    @NotNull
     private Long ownerId;
+    @NotNull
     private Long accountId;
 
     public TransferDTO() {

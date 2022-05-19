@@ -39,6 +39,9 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
         }
         checkingAccount.setType(Type.CHECKING);
         //checkingAccount.setSecretKey(passwordEncoder.encode(checkingAccount.getSecretKey()));
+        if(checkingAccount.getBalance().getAmount().compareTo(checkingAccount.getMinimumBalance().getAmount())<0){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Balance can't be less than minimum balance.");
+        }
         return checkingAccountRepository.save(checkingAccount);
     }
 }

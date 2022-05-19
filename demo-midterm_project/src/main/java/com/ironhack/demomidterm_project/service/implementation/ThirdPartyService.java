@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 @Slf4j
@@ -20,23 +21,21 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
 
     @Autowired
     private ThirdPartyRepository thirdPartyRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private UserRepository userRepository;
+
 
     public ThirdParty createThirdParty (ThirdParty thirdParty){
-        if(userRepository.findByUsername(thirdParty.getUsername())!= null){
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Username already exists");
-        }
         if (thirdParty.getId() != null){
             Optional<ThirdParty> optionalThirdParty = thirdPartyRepository.findById(thirdParty.getId());
             if(optionalThirdParty.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Third Party already exists");
         }
-        thirdParty.setRole(roleRepository.findByName("THIRD_PARTY"));
-        thirdParty.setPassword(passwordEncoder.encode("123456"));
         return thirdPartyRepository.save(thirdParty);
+    }
+
+    public List<ThirdParty> getThirdParties (){
+        return thirdPartyRepository.findAll();
+    }
+
+    public void deleteUser (Long id){
+        thirdPartyRepository.deleteById(id);
     }
 }

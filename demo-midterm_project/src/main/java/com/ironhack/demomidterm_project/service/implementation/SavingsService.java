@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +66,9 @@ public class SavingsService implements SavingsServiceInterface {
         }
         //savingsAccount.setSecretKey(passwordEncoder.encode(savings.getSecretKey()));
         savingsAccount.setType(Type.SAVINGS);
+        if(savingsAccount.getBalance().getAmount().compareTo(savingsAccount.getMinimumBalance().getAmount())<0){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Balance can't be less than minimum balance.");
+        }
         return savingsRepository.save(savingsAccount);
     }
 

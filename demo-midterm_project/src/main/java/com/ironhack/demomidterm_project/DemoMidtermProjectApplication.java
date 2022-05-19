@@ -29,7 +29,7 @@ public class DemoMidtermProjectApplication {
         return args -> {
             /*roleService.saveRole(new Role("ADMIN"));
             roleService.saveRole(new Role("ACCOUNT_HOLDER"));
-            roleService.saveRole(new Role("THIRD_PARTY"));
+
 
             adminService.createAdmin(new Admin("Olatz","Oli"));*/
 

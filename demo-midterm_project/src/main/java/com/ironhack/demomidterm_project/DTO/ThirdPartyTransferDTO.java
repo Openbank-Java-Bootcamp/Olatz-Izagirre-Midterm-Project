@@ -10,14 +10,17 @@ public class ThirdPartyTransferDTO {
     private Long accountId;
     @NotNull
     private String secretKey;
+    @NotNull
+    private String hashedKey;
 
     public ThirdPartyTransferDTO() {
     }
 
-    public ThirdPartyTransferDTO(Money amount, Long accountId, String secretKey) {
+    public ThirdPartyTransferDTO(Money amount, Long accountId, String secretKey,String hashedKey) {
         this.amount = amount;
         this.accountId = accountId;
         this.secretKey = secretKey;
+        this.hashedKey = hashedKey;
     }
 
     public Money getAmount() {
@@ -42,5 +45,13 @@ public class ThirdPartyTransferDTO {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public String getHashedKey() {
+        return hashedKey;
+    }
+
+    public void setHashedKey(String hashedKey) {
+        this.hashedKey = hashedKey;
     }
 }
