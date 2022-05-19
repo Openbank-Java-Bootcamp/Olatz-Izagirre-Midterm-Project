@@ -3,10 +3,7 @@ package com.ironhack.demomidterm_project.service.implementation;
 import com.ironhack.demomidterm_project.model.AccountHolder;
 import com.ironhack.demomidterm_project.model.Admin;
 import com.ironhack.demomidterm_project.model.ThirdParty;
-import com.ironhack.demomidterm_project.repository.AccountHolderRepository;
-import com.ironhack.demomidterm_project.repository.AdminRepository;
-import com.ironhack.demomidterm_project.repository.RoleRepository;
-import com.ironhack.demomidterm_project.repository.ThirdPartyRepository;
+import com.ironhack.demomidterm_project.repository.*;
 import com.ironhack.demomidterm_project.service.interfaces.AdminServiceInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +22,13 @@ public class AdminService implements AdminServiceInterface {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public Admin createAdmin (Admin admin){
+        if(userRepository.findByUsername(admin.getUsername())!= null){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Username already exists");
+        }
         if (admin.getId() != null){
             Optional<Admin> optionalAdmin = adminRepository.findById(admin.getId());
             if(optionalAdmin.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Admin already exists");

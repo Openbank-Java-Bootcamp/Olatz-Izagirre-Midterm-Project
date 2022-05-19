@@ -1,5 +1,6 @@
 package com.ironhack.demomidterm_project.service.interfaces;
 
+import com.ironhack.demomidterm_project.DTO.ThirdPartyTransferDTO;
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.model.Account;
 import com.ironhack.demomidterm_project.model.AccountHolder;
@@ -18,5 +19,7 @@ public interface AccountServiceInterface {
 
     List<Account> getUsersAccounts (String username);
     void moneyTransfer (Long id, TransferDTO transferDTO);
+    void sendMoney (ThirdPartyTransferDTO thirdPartyTransferDTO);
+    void receiveMoney (ThirdPartyTransferDTO thirdPartyTransferDTO);
 
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
-
+import java.util.Objects;
 
 
 @Entity
@@ -72,4 +72,5 @@ public abstract class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
 }

@@ -1,7 +1,11 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
+import com.ironhack.demomidterm_project.DTO.SavingsDTO;
 import com.ironhack.demomidterm_project.enums.Type;
+import com.ironhack.demomidterm_project.model.AccountHolder;
+import com.ironhack.demomidterm_project.model.CreditCard;
 import com.ironhack.demomidterm_project.model.Savings;
+import com.ironhack.demomidterm_project.repository.AccountHolderRepository;
 import com.ironhack.demomidterm_project.repository.SavingsRepository;
 import com.ironhack.demomidterm_project.service.interfaces.SavingsServiceInterface;
 import com.ironhack.demomidterm_project.utils.Money;
@@ -27,14 +31,41 @@ public class SavingsService implements SavingsServiceInterface {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Savings createAccount (Savings savings){
+    @Autowired
+    private AccountHolderRepository accountHolderRepository;
+
+    /*public Savings createAccount (Savings savings){
         if (savings.getId() != null){
-            Optional<Savings> optionalSavings = savingsRepository.findById(savings.getId());
-            if(optionalSavings.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Account already exists");
+            Optional<Savings> optionalCreditCard = savingsRepository.findById(savings.getId());
+            if(optionalCreditCard.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Account already exists");
         }
         savings.setSecretKey(passwordEncoder.encode(savings.getSecretKey()));
         savings.setType(Type.SAVINGS);
         return savingsRepository.save(savings);
+    }*/
+
+    public Savings createAccount (SavingsDTO savings){
+        accountHolderRepository.findById(savings.getPrimaryOwnerId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Primary account holder not found"));
+        Money balance = savings.getBalance();
+        String secretKey = savings.getSecretKey();
+        AccountHolder primaryOwner = accountHolderRepository.findById(savings.getPrimaryOwnerId()).get();
+        Savings savingsAccount = new Savings(balance,primaryOwner,secretKey);
+        if(savings.getSecondaryOwnerId()!= null){
+            accountHolderRepository.findById(savings.getSecondaryOwnerId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Secondary account holder not found"));
+            AccountHolder secondaryOwner = accountHolderRepository.findById(savings.getSecondaryOwnerId()).get();
+            savingsAccount.setSecondaryOwner(secondaryOwner);
+        }
+        if(savings.getMinimumBalance()!= null){
+            Money minimumBalance = savings.getMinimumBalance();
+            savingsAccount.setMinimumBalance(minimumBalance);
+        }
+        if(savings.getInterestRate()!= null){
+            BigDecimal interestRate = savings.getInterestRate();
+            savingsAccount.setInterestRate(interestRate);
+        }
+        //savingsAccount.setSecretKey(passwordEncoder.encode(savings.getSecretKey()));
+        savingsAccount.setType(Type.SAVINGS);
+        return savingsRepository.save(savingsAccount);
     }
 
     public void savingsInterests (){

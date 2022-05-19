@@ -10,26 +10,26 @@ import java.math.BigDecimal;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class CheckingAccount extends Account{
+public class CheckingAccount extends Account {
     @NotNull
     private String secretKey;
     @AttributeOverrides({
-            @AttributeOverride( name = "currency" , column = @Column(name = "minimum_balance_currency")),
-            @AttributeOverride( name = "amount" , column = @Column(name = "minimum_balance_amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "minimum_balance_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount")),
 
     })
     @Column(length = 510)
     @Embedded
     private final Money minimumBalance;
     @AttributeOverrides({
-            @AttributeOverride( name = "currency" , column = @Column(name = "maintenance_fee_currency")),
-            @AttributeOverride( name = "amount" , column = @Column(name = "maintenance_fee_amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "maintenance_fee_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "maintenance_fee_amount")),
 
     })
     @Column(length = 510)
     @Embedded
     private final Money maintenanceFee;
-    @Enumerated (EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public CheckingAccount() {

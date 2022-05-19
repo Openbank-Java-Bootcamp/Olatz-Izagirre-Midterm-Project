@@ -1,8 +1,10 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
 import com.ironhack.demomidterm_project.model.ThirdParty;
+import com.ironhack.demomidterm_project.model.User;
 import com.ironhack.demomidterm_project.repository.RoleRepository;
 import com.ironhack.demomidterm_project.repository.ThirdPartyRepository;
+import com.ironhack.demomidterm_project.repository.UserRepository;
 import com.ironhack.demomidterm_project.service.interfaces.ThirdPartyServiceInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,13 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public ThirdParty createThirdParty (ThirdParty thirdParty){
+        if(userRepository.findByUsername(thirdParty.getUsername())!= null){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Username already exists");
+        }
         if (thirdParty.getId() != null){
             Optional<ThirdParty> optionalThirdParty = thirdPartyRepository.findById(thirdParty.getId());
             if(optionalThirdParty.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Third Party already exists");

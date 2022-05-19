@@ -1,5 +1,6 @@
 package com.ironhack.demomidterm_project.service.implementation;
 
+import com.ironhack.demomidterm_project.DTO.ThirdPartyTransferDTO;
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.enums.Type;
 import com.ironhack.demomidterm_project.model.Account;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -32,6 +34,9 @@ public class AccountService implements AccountServiceInterface {
 
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
+
+    @Autowired
+    private StudentCheckingRepository studentCheckingRepository;
 
     public void deleteAccount (Long id){
         accountRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
@@ -53,6 +58,17 @@ public class AccountService implements AccountServiceInterface {
 
     public void updateAccountBalance (Long id, BigDecimal amount){
         Account accountFromDb = accountRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
+        if(accountFromDb.getType()== Type.SAVINGS){
+            BigDecimal minimumBalance = savingsRepository.findById(id).get().getMinimumBalance().getAmount();
+            if (amount.compareTo(minimumBalance)<0){
+                amount = amount.subtract(savingsRepository.findById(id).get().getPenaltyFee().getAmount());
+            }
+        }
+        else if (accountFromDb.getType()== Type.CHECKING){
+            BigDecimal minimumBalance = checkingAccountRepository.findById(id).get().getMinimumBalance().getAmount();
+            if (amount.compareTo(minimumBalance)<0){
+                amount = amount.subtract(checkingAccountRepository.findById(id).get().getPenaltyFee().getAmount());
+            }}
         accountFromDb.setBalance(new Money(amount));
         accountRepository.save(accountFromDb);
     }
@@ -99,4 +115,78 @@ public class AccountService implements AccountServiceInterface {
         }
     }
 
+    public void sendMoney(ThirdPartyTransferDTO thirdPartyTransferDTO){
+        Long accountId = thirdPartyTransferDTO.getAccountId();
+        accountRepository.findById(accountId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
+        Account receiver = accountRepository.findById(accountId).get();
+        if(receiver.getType()==Type.CREDIT_CARD){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You can't send money to this account.");
+        }
+        if (receiver.getType()==Type.CHECKING){
+            String secretKey = checkingAccountRepository.findById(accountId).get().getSecretKey();
+            if (!Objects.equals(secretKey, thirdPartyTransferDTO.getSecretKey())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong secret key.");
+            }
+        }
+        else if (receiver.getType()==Type.STUDENT_CHECKING){
+            String secretKey = studentCheckingRepository.findById(accountId).get().getSecretKey();
+            if (!Objects.equals(secretKey, thirdPartyTransferDTO.getSecretKey())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong secret key.");
+            }
+        }
+        else if (receiver.getType()==Type.SAVINGS){
+            String secretKey = savingsRepository.findById(accountId).get().getSecretKey();
+            if (!Objects.equals(secretKey, thirdPartyTransferDTO.getSecretKey())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong secret key.");
+            }
+        }
+        BigDecimal newBalance = receiver.getBalance().getAmount().add(thirdPartyTransferDTO.getAmount().getAmount());
+        receiver.setBalance(new Money(newBalance));
+        accountRepository.save(receiver);
+    }
+
+    public void receiveMoney(ThirdPartyTransferDTO thirdPartyTransferDTO){
+        Long accountId = thirdPartyTransferDTO.getAccountId();
+        accountRepository.findById(accountId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"));
+        Account sender = accountRepository.findById(accountId).get();
+        if(sender.getType()==Type.CREDIT_CARD){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You can't send money to this account.");
+        }
+        if (sender.getType()==Type.CHECKING){
+            String secretKey = checkingAccountRepository.findById(accountId).get().getSecretKey();
+            if (!Objects.equals(secretKey, thirdPartyTransferDTO.getSecretKey())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong secret key.");
+            }
+        }
+        else if (sender.getType()==Type.STUDENT_CHECKING){
+            String secretKey = studentCheckingRepository.findById(accountId).get().getSecretKey();
+            if (!Objects.equals(secretKey, thirdPartyTransferDTO.getSecretKey())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong secret key.");
+            }
+        }
+        else if (sender.getType()==Type.SAVINGS){
+            String secretKey = savingsRepository.findById(accountId).get().getSecretKey();
+            if (!Objects.equals(secretKey, thirdPartyTransferDTO.getSecretKey())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Wrong secret key.");
+            }
+        }if(sender.getBalance().getAmount().compareTo(thirdPartyTransferDTO.getAmount().getAmount())>=0){
+            BigDecimal newBalance = sender.getBalance().getAmount().subtract(thirdPartyTransferDTO.getAmount().getAmount());
+            if(sender.getType()== Type.SAVINGS){
+                BigDecimal minimumBalance = savingsRepository.findById(accountId).get().getMinimumBalance().getAmount();
+                if (newBalance.compareTo(minimumBalance)<0){
+                    newBalance = newBalance.subtract(savingsRepository.findById(accountId).get().getPenaltyFee().getAmount());
+                }
+            }
+            else if (sender.getType()== Type.CHECKING){
+                BigDecimal minimumBalance = checkingAccountRepository.findById(accountId).get().getMinimumBalance().getAmount();
+                if (newBalance.compareTo(minimumBalance)<0){
+                    newBalance = newBalance.subtract(checkingAccountRepository.findById(accountId).get().getPenaltyFee().getAmount());
+                }
+            }
+            sender.setBalance(new Money(newBalance));
+            accountRepository.save(sender);
+    }else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough funds.");
+        }
+    }
 }

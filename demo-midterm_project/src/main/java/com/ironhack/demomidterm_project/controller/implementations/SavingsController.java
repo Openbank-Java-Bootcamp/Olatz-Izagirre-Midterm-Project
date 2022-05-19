@@ -1,5 +1,6 @@
 package com.ironhack.demomidterm_project.controller.implementations;
 
+import com.ironhack.demomidterm_project.DTO.SavingsDTO;
 import com.ironhack.demomidterm_project.controller.interfaces.SavingsControllerInterface;
 import com.ironhack.demomidterm_project.model.Savings;
 import com.ironhack.demomidterm_project.service.interfaces.SavingsServiceInterface;
@@ -16,7 +17,7 @@ public class SavingsController implements SavingsControllerInterface {
 
     @PostMapping("/accounts/savings")
     @ResponseStatus(HttpStatus.CREATED)
-    public Savings createAccount (@RequestBody @Valid Savings savings){
+    public Savings createAccount (@RequestBody @Valid SavingsDTO savings){
         return savingsServiceInterface.createAccount(savings);
     }
 }

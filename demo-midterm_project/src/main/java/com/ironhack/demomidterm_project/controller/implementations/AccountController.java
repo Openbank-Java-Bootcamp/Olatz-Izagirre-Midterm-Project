@@ -1,6 +1,7 @@
 package com.ironhack.demomidterm_project.controller.implementations;
 
 import com.ironhack.demomidterm_project.DTO.AccountBalanceOnlyDTO;
+import com.ironhack.demomidterm_project.DTO.ThirdPartyTransferDTO;
 import com.ironhack.demomidterm_project.DTO.TransferDTO;
 import com.ironhack.demomidterm_project.controller.interfaces.AccountControllerInterface;
 import com.ironhack.demomidterm_project.model.*;
@@ -89,5 +90,17 @@ public class AccountController implements AccountControllerInterface {
         else{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not found.");
         }
+    }
+
+    @PatchMapping ("/accounts/sendMoney")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void sendMoney (@RequestBody @Valid ThirdPartyTransferDTO thirdPartyTransferDTO){
+        accountServiceInterface.sendMoney(thirdPartyTransferDTO);
+    }
+
+    @PatchMapping ("/accounts/receiveMoney")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void receiveMoney (@RequestBody @Valid ThirdPartyTransferDTO thirdPartyTransferDTO){
+        accountServiceInterface.receiveMoney(thirdPartyTransferDTO);
     }
 }
