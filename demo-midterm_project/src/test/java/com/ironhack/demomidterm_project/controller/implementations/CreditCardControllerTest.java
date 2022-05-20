@@ -1,16 +1,20 @@
 package com.ironhack.demomidterm_project.controller.implementations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ironhack.demomidterm_project.DTO.CreditCardDTO;
 import com.ironhack.demomidterm_project.model.AccountHolder;
 import com.ironhack.demomidterm_project.model.Admin;
 import com.ironhack.demomidterm_project.model.Role;
-import com.ironhack.demomidterm_project.model.ThirdParty;
 import com.ironhack.demomidterm_project.repository.AccountHolderRepository;
+import com.ironhack.demomidterm_project.repository.AccountRepository;
 import com.ironhack.demomidterm_project.repository.AdminRepository;
+import com.ironhack.demomidterm_project.repository.CreditCardRepository;
 import com.ironhack.demomidterm_project.service.implementation.AccountHolderService;
+import com.ironhack.demomidterm_project.service.implementation.AccountService;
 import com.ironhack.demomidterm_project.service.implementation.AdminService;
 import com.ironhack.demomidterm_project.service.implementation.RoleService;
 import com.ironhack.demomidterm_project.utils.Address;
+import com.ironhack.demomidterm_project.utils.Money;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,17 +27,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@SpringBootTest
-class AccountHolderControllerTest {
 
+@SpringBootTest
+class CreditCardControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
-
     @Autowired
     private AdminService adminService;
     @Autowired
@@ -46,6 +50,10 @@ class AccountHolderControllerTest {
 
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private CreditCardRepository creditCardRepository;
 
     private MockMvc mockMvc;
 
@@ -68,23 +76,45 @@ class AccountHolderControllerTest {
 
     @AfterEach
     void tearDown() {
+        accountRepository.deleteAll();
         adminRepository.deleteAll();
         accountHolderRepository.deleteAll();
     }
 
     @Test
     @WithMockUser(username = "Aiko", password = "123456",roles = "ADMIN")
-    void createAccountHolder_Valid_Created () throws Exception {
-        AccountHolder accountHolder = new AccountHolder("Aita","Aitatxu", Date.valueOf("1965-03-02"),new Address("Arene","Getxo",48991));
-        String body = objectMapper.writeValueAsString(accountHolder);
-        MvcResult mvcResult = mockMvc.perform(post("/api/users/accountHolders").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().contains("Aita"));
+    void createAccount_ValidDefault_Created() throws Exception {
+        CreditCardDTO creditCardDTO = new CreditCardDTO(new Money(BigDecimal.valueOf(500L)),5L);
+        String body = objectMapper.writeValueAsString(creditCardDTO);
+        MvcResult mvcResult = mockMvc.perform(post("/api/accounts/creditCards").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("500"));
+        assertEquals(BigDecimal.valueOf(0.2).setScale(2),creditCardRepository.findById(1l).get().getInterestRate());
+        assertEquals(BigDecimal.valueOf(100).setScale(2),creditCardRepository.findById(1l).get().getCreditLimit().getAmount());
     }
     @Test
     @WithMockUser(username = "Aiko", password = "123456",roles = "ADMIN")
-    void createAccountHolder_existingUsername_unprocessableEntity () throws Exception {
-        AccountHolder accountHolder = new AccountHolder("Aita","Iki", Date.valueOf("1965-03-02"),new Address("Arene","Getxo",48991));
-        String body = objectMapper.writeValueAsString(accountHolder);
-        MvcResult mvcResult = mockMvc.perform(post("/api/users/accountHolders").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity()).andReturn();
+    void createAccount_ValidChosen_Created() throws Exception {
+        CreditCardDTO creditCardDTO = new CreditCardDTO(new Money(BigDecimal.valueOf(500L)),5L,4L,new Money(BigDecimal.valueOf(200)),BigDecimal.valueOf(0.15));
+        String body = objectMapper.writeValueAsString(creditCardDTO);
+        MvcResult mvcResult = mockMvc.perform(post("/api/accounts/creditCards").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("500"));
+        assertEquals(BigDecimal.valueOf(0.15).setScale(2),creditCardRepository.findById(1l).get().getInterestRate());
+        assertEquals(BigDecimal.valueOf(200).setScale(2),creditCardRepository.findById(1l).get().getCreditLimit().getAmount());
+        assertEquals("Olatz",creditCardRepository.findById(1l).get().getSecondaryOwner().getName());
+    }
+
+    @Test
+    @WithMockUser(username = "Aiko", password = "123456",roles = "ADMIN")
+    void createAccount_InvalidPrimary_NotFound() throws Exception {
+        CreditCardDTO creditCardDTO = new CreditCardDTO(new Money(BigDecimal.valueOf(500L)),1L);
+        String body = objectMapper.writeValueAsString(creditCardDTO);
+        mockMvc.perform(post("/api/accounts/creditCards").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound()).andReturn();
+    }
+    @Test
+    @WithMockUser(username = "Aiko", password = "123456",roles = "ADMIN")
+    void createAccount_InvalidSecondary_NotFound() throws Exception {
+        CreditCardDTO creditCardDTO = new CreditCardDTO(new Money(BigDecimal.valueOf(500L)),5L,1L);
+        String body = objectMapper.writeValueAsString(creditCardDTO);
+        mockMvc.perform(post("/api/accounts/creditCards").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound()).andReturn();
     }
 }

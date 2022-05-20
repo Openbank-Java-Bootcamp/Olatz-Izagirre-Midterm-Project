@@ -2,6 +2,7 @@ package com.ironhack.demomidterm_project.controller.interfaces;
 
 import com.ironhack.demomidterm_project.DTO.UserPasswordOnlyDTO;
 import com.ironhack.demomidterm_project.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Principal;
 import java.util.List;

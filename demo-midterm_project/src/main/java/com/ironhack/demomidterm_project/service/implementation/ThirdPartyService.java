@@ -36,6 +36,7 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
     }
 
     public void deleteUser (Long id){
+        thirdPartyRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
         thirdPartyRepository.deleteById(id);
     }
 }

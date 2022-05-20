@@ -13,7 +13,10 @@ import com.ironhack.demomidterm_project.service.interfaces.UserServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -49,6 +52,9 @@ public class UserController implements UserControllerInterface {
     public void passwordChange(@PathVariable String username, Principal principal, @RequestBody UserPasswordOnlyDTO userPasswordOnlyDTO) {
         if (Objects.equals(principal.getName(), username)) {
             userServiceInterface.updatePassword(username, userPasswordOnlyDTO.getPassword());
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not your username.");
         }
     }
 }

@@ -95,8 +95,13 @@ class ThirdPartyControllerTest {
     @Test
     @WithMockUser(username = "Aiko", password = "123456",roles = "ADMIN")
     void deleteUser_Valid_NoContent() throws Exception {
-        mockMvc.perform(delete("/api/users/thirdParties/1"))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/users/thirdParties/1")).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(username = "Aiko", password = "123456",roles = "ADMIN")
+    void deleteUser_invalidId_NotFound() throws Exception {
+        mockMvc.perform(delete("/api/users/thirdParties/4")).andExpect(status().isNotFound());
     }
 
 

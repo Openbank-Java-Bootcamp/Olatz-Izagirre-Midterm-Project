@@ -88,7 +88,7 @@ public class AccountService implements AccountServiceInterface {
             Account transferReceiver = accountRepository.findById(receiverId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
             Long ownerId = transferDTO.getOwnerId();
             AccountHolder owner = accountHolderRepository.findById(ownerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner not found"));
-            if (transferReceiver.getPrimaryOwner().equals(owner) || transferReceiver.getSecondaryOwner().equals(owner)) {
+            if (transferReceiver.getPrimaryOwner().equals(owner) || transferReceiver.getSecondaryOwner()== owner) {
                 BigDecimal newBalanceMaker = transferMaker.getBalance().getAmount().subtract(transferAmount);
                 BigDecimal newBalanceReceiver = transferReceiver.getBalance().getAmount().add(transferAmount);
                 if (transferMaker.getType() == Type.SAVINGS) {
