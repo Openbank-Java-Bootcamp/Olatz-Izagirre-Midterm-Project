@@ -7,7 +7,7 @@
 ## TECHNOLOGIES USED
 
 ## MODELS
-
+![class diagram](./demo-midterm_project/Class diagram.png)
 ## SERVER ROUTES TABLE
 
 ## FUTURE WORK
